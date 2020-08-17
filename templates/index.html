@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval'  https://code.jquery.com https://ajax.aspnetcdn.com  *.reftagger.com *.fastly.net *.facebook.com *.youtube.com *.googlesyndication.com *.googleapis.com  *.google-analytics.com *.googletagservices.com *.google.com.gh *.google.com *.doubleclick.net *.vimeo.com *.cloudflare.com *.cloudinary.com *.bootstrapcdn.com; img-src * data:; frame-src *;  ">
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+    <title>Web Scraper</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+   
+    <!--font-awesome-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.js"></script>
+
+    
+
+
+
+</head>
+<body>
+      <div id="spinner" style="width: 100px;height: 100px;position: absolute; margin: auto; top: 0;right: 0;bottom: 0;left: 0;">
+         <button class="btn btn-primary" >
+              <span class="spinner-border spinner-border-sm"></span>
+              Loading..
+         </button>
+    </div>
+    <h1 class="text-center">Scraper</h1>
+    <div class="container text-center">
+        <div class="row">
+      
+            <div class="col-xl-6 col-md-6 col-sm-12">
+            	<div class="input-group mb-3">
+  
+  			<input type="text" id="start_url" class="form-control"  aria-describedby="inputGroup-sizing-default">
+  			<label class="error" for="start_url" id="start_url_error">Please Provide This</label>
+		</div>
+            </div>
+         
+        	<button class="mx-auto btn-primary text-white" id="crawl">Submit</button>
+        </div>
+        
+    </div>
+    
+    <script type="text/javascript">
+    $(function(){
+   $(".error").hide();
+   $("#spinner").hide();
+   $("#crawl").click(function(){
+        $("#spinner").hide();
+        $(".error").hide();
+        var start_url = $("#start_url").val();
+        
+        if (start_url == ''){
+            $('#start_url_error').show();
+            $('#start_url_error').focus();
+            return false;
+        }
+       
+        $("#spinner").show();
+        $("#spinner").focus();
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/get_site_scrape?start_url="+start_url,
+            success:function(data){
+                $("#spinner").hide();
+                var blob = new Blob([data])
+                var filename ="scrapedData.csv"
+//                window.navigator.msSaveBlob(blob, filename);
+//                var URL = window.URL || window.webkitURL;
+//                var downloadUrl = URL.createObjectURL(blob);
+
+                var a = document.createElement("a");
+//                a.href = downloadUrl;
+                a.href = window.URL.createObjectURL(blob)
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+            }
+        });
+   });
+   return false;
+})
+
+
+    
+    </script>
+
+    </body>
+</html>
